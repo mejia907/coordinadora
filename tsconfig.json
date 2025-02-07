@@ -8,15 +8,13 @@
     "moduleResolution": "node", // Resolucion de modulos
     "baseUrl": "./src", // Carpeta base
     "paths": {
-      "@/*": [
-        "./src/*"
-      ]
+        "@config/*": ["config/*"],
     },
+  },
     "include": ["**/*.ts"], // Archivos a compilar
     "exclude": ["node_modules"], // Archivos a excluir
     "ts-node": {
       "require": ["tsconfig-paths/register"] // Habilita el uso de tsconfig-paths
-    }
   }
 
 }

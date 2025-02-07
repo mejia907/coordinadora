@@ -1,0 +1,2 @@
+##DOCKER
+docker compose up
