@@ -37,7 +37,7 @@ export default class UserRepository {
         [user.role_id]
       );
 
-      if (existingRole.length == 0) {
+      if (!existingRole.length) {
         throw new Error("El rol no existe.");
       }
 
@@ -73,8 +73,8 @@ export default class UserRepository {
         [email]
       );
 
-      if (user.length == 0) {
-        return null;
+      if (!user.length) {
+        throw new Error("El usuario no existe.");
       }
 
       return user[0];

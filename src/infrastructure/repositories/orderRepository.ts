@@ -12,7 +12,7 @@ export default class OrderRepository {
         [order.user_id]
       );
 
-      if (existingUser.length == 0) {
+      if (!existingUser.length) {
         throw new Error("El usuario no existe.");
       }
 
@@ -24,7 +24,7 @@ export default class OrderRepository {
           [order.status_order_id]
         );
 
-        if (existingStatusOrder.length == 0) {
+        if (!existingStatusOrder.length) {
           throw new Error("El estado de la orden no existe.");
         }
       }
@@ -62,7 +62,7 @@ export default class OrderRepository {
   public assignRoute = async (order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> => {
     try {
 
-      if (isNaN(order_id)) {
+      if (!order_id || isNaN(order_id)) {
         throw new Error("Debe definir el número de orden.");
       }
       // Verificar si la orden existe
@@ -71,7 +71,7 @@ export default class OrderRepository {
         [order_id]
       );
 
-      if (existingOrder.length == 0 || isNaN(order_id)) {
+      if (!existingOrder.length || isNaN(order_id)) {
         throw new Error("El número de orden no existe.");
       }
 
@@ -81,7 +81,7 @@ export default class OrderRepository {
         [route_id]
       );
 
-      if (existingRoute.length == 0) {
+      if (!existingRoute.length) {
         throw new Error("La ruta no existe.");
       }
 
@@ -96,7 +96,7 @@ export default class OrderRepository {
         [carrier_id]
       );
 
-      if (existingCarrier.length == 0 || !existingCarrier[0].availability) {
+      if (!existingCarrier.length || !existingCarrier[0].availability) {
         throw new Error("El transportista no está disponible.");
       }
 

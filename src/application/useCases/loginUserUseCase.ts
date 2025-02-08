@@ -22,7 +22,7 @@ async function LoginUserUseCase(email: string, password: string): Promise<AuthEn
 
   // Generar el token
   const token = jwt.sign(
-    { userId: user.id, role: user.role_id },
+    { user_id: user.id, role: user.role_id },
     envs.JWT_SECRET ?? '',
     { expiresIn: "2h" }
   );

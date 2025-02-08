@@ -2,6 +2,7 @@ import { Router } from 'express'
 import { RoleController } from '@controllers/roleController'
 import { validateSchema } from '@infrastructure/http/middelwares/validateSchema'
 import { roleSchema } from '@schemas/roleSchema'
+import { authRequired } from '@infrastructure/http/middelwares/authRequired'
 
 export class RoleRoutes {
 
@@ -9,7 +10,7 @@ export class RoleRoutes {
     const router = Router()
     const roleController = new RoleController()
     
-    router.post('/', validateSchema(roleSchema), roleController.create);
+    router.post('/', authRequired, validateSchema(roleSchema), roleController.create);
 
     return router
   }
