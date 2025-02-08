@@ -39,7 +39,7 @@ export default class OrderRepository {
         throw new Error("El mensajero no existe.");
       }
 
-      // Guardar el usuario
+      // Guardar el la orden
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO orders 
         (user_id, type_product, weight, dimension_long, dimension_tall, dimension_width, amount, destination_city, destination_address, carrier_id, status_order_id, estimated_delivery) 
