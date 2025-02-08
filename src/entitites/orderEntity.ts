@@ -13,7 +13,7 @@ export class OrderEntity {
     public carrier_id: number,
     public estimated_delivery: Date,
     public created_at: Date,
-    public status_order_id: number = 1, // "En espera" por defecto
+    public status_order_id: number, 
     public actual_delivery?: Date,
     public updated_at?: Date
   ) { }

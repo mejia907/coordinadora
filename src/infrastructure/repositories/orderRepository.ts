@@ -39,11 +39,16 @@ export default class OrderRepository {
         throw new Error("El mensajero no existe.");
       }
 
+      // Verificar si el estado de la orden existe sino asignar 1 "En espera"
+      if (!order.status_order_id) {
+        order.status_order_id = 1
+      }
+
       // Guardar el la orden
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO orders 
         (user_id, type_product, weight, dimension_long, dimension_tall, dimension_width, amount, destination_city, destination_address, carrier_id, status_order_id, estimated_delivery) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           order.user_id,
           order.type_product,
