@@ -7,8 +7,6 @@ export default class UserRepository {
   public create = async (user: UserEntity): Promise<UserEntity> => {
 
     try {
-      // Cifrar la contraseña antes de guardarla
-      user.password = await bcrypt.hash(user.password, 10)
 
       // Verificar si el correo electronico existe
       const [existingUser]: any = await mysqlConnection.query(
@@ -29,6 +27,9 @@ export default class UserRepository {
       if (existingDocument.length > 0) {
         throw new Error("El número de documento ya existe.");
       }
+
+      // Cifrar la contraseña antes de guardarla
+      user.password = await bcrypt.hash(user.password, 10)
 
       // Verificar si el rol existe
       const [existingRole]: any = await mysqlConnection.query(
@@ -60,6 +61,31 @@ export default class UserRepository {
 
       return { ...user, id: result.insertId, }
 
+    } catch (error: Error | any) {
+      throw new Error(error.message);
+    }
+  }
+
+  public findByEmail = async (email: string): Promise<UserEntity | null> => {
+    try {
+      const [user]: any = await mysqlConnection.query(
+        "SELECT * FROM users WHERE email = ?",
+        [email]
+      );
+
+      if (user.length == 0) {
+        return null;
+      }
+
+      return user[0];
+    } catch (error: Error | any) {
+      throw new Error(error.message);
+    }
+  }
+
+  public comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+    try {
+      return await bcrypt.compare(password, hashedPassword);
     } catch (error: Error | any) {
       throw new Error(error.message);
     }

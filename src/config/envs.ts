@@ -10,4 +10,5 @@ export const envs = {
   MYSQL_DOCKER_PORT: get('MYSQL_DOCKER_PORT').default(3306).asPortNumber(),
   SERVER_PORT: get('SERVER_PORT').default(3000).asPortNumber(),
   SERVER_DOCKER_PORT: get('SERVER_DOCKER_PORT').default(3000).asPortNumber(),
+  JWT_SECRET: get('JWT_SECRET').asString(),
 }

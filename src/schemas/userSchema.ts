@@ -6,7 +6,6 @@ enum TypeDocument {
   TI = 'TI'
 }
 
-
 export const userSchema = z.object({
   type_document: z
     .nativeEnum(TypeDocument, { errorMap: () => ({ message: 'El tipo de documento es obligatorio y debe ser CC, CE o TI' }) }),

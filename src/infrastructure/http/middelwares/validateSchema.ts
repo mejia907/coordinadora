@@ -17,7 +17,6 @@ export const validateSchema =
         }
 
         res.status(500).json({
-          statusResponse: false,
           message: "Error interno del servidor",
         });
         return;
