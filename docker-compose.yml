@@ -1,10 +1,26 @@
 version: '3.8'
 services:
   mysql:
-    image: mysql
+    image: mysql:8
+    container_name: mysqlCoordinadora    
     restart: always
+    env_file: ./.env
     environment:
-      MYSQL_ROOT_PASSWORD: coordinadora
-      MYSQL_DATABASE: coordinadora
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - 3306:3306
+      - ${MYSQL_PORT}:${MYSQL_DOCKER_PORT}
+
+  apiCoordinadora:
+    build: .
+    container_name: apiCoordinadora
+    restart: always
+    env_file: ./.env
+    ports:
+      - ${SERVER_PORT}:${SERVER_DOCKER_PORT}
+    depends_on:
+      - mysql
+    links:
+      - mysql

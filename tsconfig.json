@@ -9,6 +9,11 @@
     "baseUrl": "./src", // Carpeta base
     "paths": {
         "@config/*": ["config/*"],
+        "@entitites/*": ["entitites/*"],
+        "@infrastructure/*": ["infrastructure/*"],
+        "@controllers/*": ["controllers/*"],
+        "@application/*": ["application/*"],
+        "@schemas/*": ["schemas/*"],
     },
   },
     "include": ["**/*.ts"], // Archivos a compilar
