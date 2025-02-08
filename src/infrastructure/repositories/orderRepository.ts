@@ -29,26 +29,16 @@ export default class OrderRepository {
         }
       }
 
-      // Verificar si el mensajero existe
-      const [existingCarrier]: any = await mysqlConnection.query(
-        "SELECT id FROM carriers WHERE id = ?",
-        [order.carrier_id]
-      );
-
-      if (existingCarrier.length == 0) {
-        throw new Error("El mensajero no existe.");
-      }
-
       // Verificar si el estado de la orden existe sino asignar 1 "En espera"
       if (!order.status_order_id) {
         order.status_order_id = 1
       }
 
-      // Guardar el la orden
+      // Guardar la orden
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO orders 
-        (user_id, type_product, weight, dimension_long, dimension_tall, dimension_width, amount, destination_city, destination_address, carrier_id, status_order_id, estimated_delivery) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        (user_id, type_product, weight, dimension_long, dimension_tall, dimension_width, amount, destination_address, status_order_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           order.user_id,
           order.type_product,
@@ -57,15 +47,76 @@ export default class OrderRepository {
           order.dimension_tall,
           order.dimension_width,
           order.amount,
-          order.destination_city,
           order.destination_address,
-          order.carrier_id,
           order.status_order_id,
-          order.estimated_delivery
         ]
       )
 
       return { ...order, id: result.insertId, }
+
+    } catch (error: Error | any) {
+      throw new Error(error.message);
+    }
+  }
+
+  public assignRoute = async (order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> => {
+    try {
+
+      if (isNaN(order_id)) {
+        throw new Error("Debe definir el número de orden.");
+      }
+      // Verificar si la orden existe
+      const [existingOrder]: any = await mysqlConnection.query(
+        "SELECT id FROM orders WHERE id = ?",
+        [order_id]
+      );
+
+      if (existingOrder.length == 0 || isNaN(order_id)) {
+        throw new Error("El número de orden no existe.");
+      }
+
+      // Verificar si la ruta existe
+      const [existingRoute]: any = await mysqlConnection.query(
+        "SELECT id FROM routes WHERE id = ?",
+        [route_id]
+      );
+
+      if (existingRoute.length == 0) {
+        throw new Error("La ruta no existe.");
+      }
+
+      // Verificar si la fecha estimada de entrega es menor a la fecha actual
+      if (new Date(estimated_delivery) < new Date()) {
+        throw new Error("La fecha estimada de entrega no puede ser menor a la fecha actual.");
+      }
+
+      // Verificar si el transportista existe
+      const [existingCarrier]: any = await mysqlConnection.query(
+        "SELECT availability FROM carriers WHERE id = ?",
+        [carrier_id]
+      );
+
+      if (existingCarrier.length == 0 || !existingCarrier[0].availability) {
+        throw new Error("El transportista no está disponible.");
+      }
+
+      // Actualizar la orden con la ruta y el transportista
+      const [result]: any = await mysqlConnection.query(
+        `UPDATE orders 
+        SET
+        carrier_id = ?,
+        route_id = ?,
+        status_order_id = ?,
+        estimated_delivery = ?
+        WHERE id = ?`,
+        [
+          carrier_id,
+          route_id,
+          2, // "En ruta"
+          estimated_delivery,
+          order_id
+        ]
+      )
 
     } catch (error: Error | any) {
       throw new Error(error.message);

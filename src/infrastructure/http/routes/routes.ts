@@ -3,6 +3,7 @@ import { UserRoutes } from './userRoutes'
 import { OrderRoutes } from './orderRoutes'
 import { RoleRoutes } from './roleRoutes'
 import { CarrierRoutes } from './carrierRoutes'
+import { RouteRoutes } from './routeRoutes'
 
 export class Routes {
   static get routes(): Router {
@@ -19,7 +20,10 @@ export class Routes {
 
     //Rutas de mensajeros
     router.use("/api/carrier", CarrierRoutes.routes)
-    
+
+    //Rutas de rutas
+    router.use("/api/route", RouteRoutes.routes)
+
     return router
   }
 }

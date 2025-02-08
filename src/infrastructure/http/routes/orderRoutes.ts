@@ -1,7 +1,7 @@
 import { Router } from 'express'
 import { OrderController } from '@controllers/orderController'
 import { validateSchema } from '@infrastructure/http/middelwares/validateSchema'
-import { orderSchema } from '@schemas/orderSchema'
+import { assignRouteSchema, orderSchema } from '@schemas/orderSchema'
 
 export class OrderRoutes {
 
@@ -10,6 +10,7 @@ export class OrderRoutes {
     const orderController = new OrderController()
     
     router.post('/', validateSchema(orderSchema), orderController.create);
+    router.post('/assign/:id', validateSchema(assignRouteSchema), orderController.assign);
 
     return router
   }

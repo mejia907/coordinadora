@@ -4,7 +4,7 @@ enum TypeProduct {
   PAQUETES = 'PAQUETES',
   DOCUMENTOS = 'DOCUMENTOS',
 }
-
+// Schema para la creación de una orden
 export const orderSchema = z.object({
   user_id: z
     .number({ required_error: 'El código del usuario es obligatorio', invalid_type_error: 'El código del usuario debe ser un número' }),
@@ -22,14 +22,16 @@ export const orderSchema = z.object({
     .number({ required_error: 'La cantidad es obligatoria', invalid_type_error: 'La cantidad debe ser un número' }),
   destination_address: z
     .string({ required_error: 'La dirección es obligatoria' }),
-  destination_city: z
-    .string({ required_error: 'La ciudad es obligatoria' }).min(3, { message: 'La ciudad debe tener al menos 3 caracteres' }),
-  carrier_id: z
-    .number({ required_error: 'El código del mensajero es obligatorio', invalid_type_error: 'El código del mensajero debe ser un número' }),
+})
+
+// Schema para la creación de una ruta
+export const assignRouteSchema = z.object({
+  carrier_id: z.number({ required_error: 'El código del mensajero es obligatorio', invalid_type_error: 'El código del mensajero debe ser un número' }).int().positive(),
+  route_id: z.number({ required_error: 'El código de la ruta es obligatorio', invalid_type_error: 'El código de la ruta debe ser un número' }).int().positive(),
   estimated_delivery: z
     .string({ required_error: 'La fecha estimada de entrega es obligatoria' })
     .refine((value) => {
       const dateRegex = /((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])/
       return dateRegex.test(value)
     }, { message: 'La fecha estimada de entrega debe ser una fecha válida en el formato YYYY-MM-DD' }),
-})
+});

@@ -16,7 +16,7 @@ export default class RoleRepository {
         throw new Error("El rol ya existe.");
       }
 
-      // Guardar el usuario
+      // Guardar el rol de usuario
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO roles 
         (name) 
