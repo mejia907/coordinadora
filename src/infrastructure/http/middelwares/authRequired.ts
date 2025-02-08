@@ -1,7 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { AuthService } from "@infrastructure/services/authService";
-import { UserTokenEntity } from "@entitites/userTokenEntity";
 
 interface CustomRequest extends Request {
   user?: any; 
@@ -11,14 +9,14 @@ export const authRequired = (req: CustomRequest, res: Response, next: NextFuncti
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ message: "Acceso denegado" });
+    res.status(401).json({ message: "Acceso denegado, debe iniciar sesión" });
     return; 
   }
 
   try {
     // Verificar el token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-    req.user = decoded;
+    const decodedJwt = jwt.verify(token, process.env.JWT_SECRET as string);
+    req.user = decodedJwt;
     next(); 
   } catch (error) {
     res.status(403).json({ message: "Token inválido" });
