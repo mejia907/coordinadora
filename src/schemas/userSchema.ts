@@ -22,7 +22,7 @@ export const userSchema = z.object({
   address: z
     .string({ required_error: 'La dirección es obligatoria' }),
   role_id: z
-    .number({ required_error: 'El rol es obligatorio', invalid_type_error: 'El rol debe ser un número' }),
+    .number({ required_error: 'El código del rol es obligatorio', invalid_type_error: 'El rol debe ser un número' }),
   password: z
     .string({ required_error: 'La contraseña es obligatoria' })
     .min(8, { message: 'La contraseña debe tener al menos 8 caracteres' }),
