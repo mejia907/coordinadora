@@ -16,8 +16,18 @@ export default class UserRepository {
         [user.email]
       );
 
-      if (existingUser.length == 0) {
+      if (existingUser.length > 0) {
         throw new Error("El correo electrónico ya existe.");
+      }
+
+      // Verificar si el número de documento existe
+      const [existingDocument]: any = await mysqlConnection.query(
+        "SELECT document FROM users WHERE document = ?",
+        [user.document]
+      );
+
+      if (existingDocument.length > 0) {
+        throw new Error("El número de documento ya existe.");
       }
 
       // Verificar si el rol existe
@@ -33,9 +43,11 @@ export default class UserRepository {
       // Guardar el usuario
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO users 
-        (name, email, phone, address, role_id, status, password) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)`,
+        (type_document, document, name, email, phone, address, role_id, status, password) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
+          user.type_document,
+          user.document,
           user.name,
           user.email,
           user.phone,
