@@ -5,14 +5,17 @@ import { userSchema } from '@schemas/userSchema'
 import { authSchema } from '@schemas/authSchema'
 import { authRequired } from '@infrastructure/http/middelwares/authRequired'
 
+/**
+ * @description Rutas de usuarios
+ */
 export class UserRoutes {
 
   static get routes(): Router {
     const router = Router()
     const userController = new UserController()
     
-    router.post('/', authRequired, validateSchema(userSchema), userController.create);
-    router.post('/login', validateSchema(authSchema), userController.login);
+    router.post('/', authRequired, validateSchema(userSchema), userController.create)
+    router.post('/login', validateSchema(authSchema), userController.login)
 
     return router
   }

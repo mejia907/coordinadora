@@ -3,7 +3,14 @@ import bcrypt from 'bcrypt'
 import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
 import { UserEntity } from '@entitites/userEntity'
 
+/**
+ * @description Repositorio de usuarios
+ */
 export default class UserRepository {
+  /**
+   * @param user 
+   * @description Guardar un usuario
+   */
   public create = async (user: UserEntity): Promise<UserEntity> => {
 
     try {
@@ -12,20 +19,20 @@ export default class UserRepository {
       const [existingUser]: any = await mysqlConnection.query(
         "SELECT email FROM users WHERE email = ?",
         [user.email]
-      );
+      )
 
       if (existingUser.length > 0) {
-        throw new Error("El correo electrónico ya existe.");
+        throw new Error("El correo electrónico ya existe.")
       }
 
       // Verificar si el número de documento existe
       const [existingDocument]: any = await mysqlConnection.query(
         "SELECT document FROM users WHERE document = ?",
         [user.document]
-      );
+      )
 
       if (existingDocument.length > 0) {
-        throw new Error("El número de documento ya existe.");
+        throw new Error("El número de documento ya existe.")
       }
 
       // Cifrar la contraseña antes de guardarla
@@ -38,7 +45,7 @@ export default class UserRepository {
       );
 
       if (!existingRole.length) {
-        throw new Error("El rol no existe.");
+        throw new Error("El rol no existe.")
       }
 
       // Guardar el usuario
@@ -62,10 +69,14 @@ export default class UserRepository {
       return { ...user, id: result.insertId, }
 
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 
+  /**
+   * @param email 
+   * @description Buscar un usuario por su correo electrónico 
+   */
   public findByEmail = async (email: string): Promise<UserEntity | null> => {
     try {
       const [user]: any = await mysqlConnection.query(
@@ -74,20 +85,24 @@ export default class UserRepository {
       );
 
       if (!user.length) {
-        throw new Error("El usuario no existe.");
+        throw new Error("El usuario no existe.")
       }
 
       return user[0];
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
-
+  /**
+   * @param password 
+   * @param hashedPassword 
+   * @description Verificar si la contraseña es correcta
+   */
   public comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
     try {
       return await bcrypt.compare(password, hashedPassword);
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 }

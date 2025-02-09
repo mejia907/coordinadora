@@ -1,6 +1,9 @@
 import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
 import { RouteEntity } from '@entitites/routeEntity'
 
+/**
+ * @description Repositorio de rutas
+ */
 export default class RouteRepository {
   public create = async (route: RouteEntity): Promise<RouteEntity> => {
 
@@ -8,9 +11,9 @@ export default class RouteRepository {
 
       // Verificar si la ruta ya existe
       const [existingUser]: any = await mysqlConnection.query(
-        "SELECT id FROM routes WHERE origin = ? AND destination = ? AND status = 1",
+        "SELECT id FROM routes WHERE origin = ? AND destination = ?",
         [route.origin, route.destination]
-      );
+      )
 
       if (existingUser.length > 0) {
         throw new Error("La ruta ya existe.")
@@ -34,7 +37,7 @@ export default class RouteRepository {
       return { ...route, id: result.insertId, }
 
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 }

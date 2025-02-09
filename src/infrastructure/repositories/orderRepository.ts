@@ -1,6 +1,11 @@
 import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
 import { OrderEntity } from '@entitites/orderEntity'
+import redisClient from '@infrastructure/cache/redisClient'
 
+/**
+ * @param order
+ * @description Repositorio de ordenes
+ */
 export default class OrderRepository {
   public create = async (order: OrderEntity): Promise<OrderEntity> => {
 
@@ -10,10 +15,10 @@ export default class OrderRepository {
       const [existingUser]: any = await mysqlConnection.query(
         "SELECT id FROM users WHERE id = ?",
         [order.user_id]
-      );
+      )
 
       if (!existingUser.length) {
-        throw new Error("El usuario no existe.");
+        throw new Error("El usuario no existe.")
       }
 
       // Verificar si el estado de la orden existe
@@ -22,10 +27,10 @@ export default class OrderRepository {
         const [existingStatusOrder]: any = await mysqlConnection.query(
           "SELECT id FROM status_order WHERE id = ?",
           [order.status_order_id]
-        );
+        )
 
         if (!existingStatusOrder.length) {
-          throw new Error("El estado de la orden no existe.");
+          throw new Error("El estado de la orden no existe.")
         }
       }
 
@@ -55,49 +60,57 @@ export default class OrderRepository {
       return { ...order, id: result.insertId, }
 
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 
+  /**
+   * @param order_id 
+   * @param route_id 
+   * @param carrier_id 
+   * @param estimated_delivery 
+   * @description Asignar una ruta a una orden
+   */
   public assignRoute = async (order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> => {
     try {
 
       if (!order_id || isNaN(order_id)) {
-        throw new Error("Debe definir el número de orden.");
+        throw new Error("Debe definir el número de orden.")
       }
+
       // Verificar si la orden existe
       const [existingOrder]: any = await mysqlConnection.query(
         "SELECT id FROM orders WHERE id = ?",
         [order_id]
-      );
+      )
 
       if (!existingOrder.length || isNaN(order_id)) {
-        throw new Error("El número de orden no existe.");
+        throw new Error("El número de orden no existe.")
       }
 
       // Verificar si la ruta existe
       const [existingRoute]: any = await mysqlConnection.query(
         "SELECT id FROM routes WHERE id = ?",
         [route_id]
-      );
+      )
 
       if (!existingRoute.length) {
-        throw new Error("La ruta no existe.");
+        throw new Error("La ruta no existe.")
       }
 
       // Verificar si la fecha estimada de entrega es menor a la fecha actual
       if (new Date(estimated_delivery) < new Date()) {
-        throw new Error("La fecha estimada de entrega no puede ser menor a la fecha actual.");
+        throw new Error("La fecha estimada de entrega no puede ser menor a la fecha actual.")
       }
 
       // Verificar si el transportista existe
       const [existingCarrier]: any = await mysqlConnection.query(
         "SELECT availability FROM carriers WHERE id = ?",
         [carrier_id]
-      );
+      )
 
       if (!existingCarrier.length || !existingCarrier[0].availability) {
-        throw new Error("El transportista no está disponible.");
+        throw new Error("El transportista no está disponible.")
       }
 
       // Actualizar la orden con la ruta y el transportista
@@ -118,9 +131,54 @@ export default class OrderRepository {
         ]
       )
 
+      if (result.affectedRows > 0) {
+        // Guardar en Redis le estado con expiración de 60 minutos
+        await redisClient.setEx(`order_status_${order_id}`, 3600, "En ruta")
+      }
+
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
+
+  /**
+   * @param order_id 
+   * @description Obtener el estado de una orden
+   */
+  public getOrderStatus = async (order_id: number): Promise<string> => {
+    try {
+
+      if (!order_id || isNaN(order_id)) {
+        throw new Error("Debe definir un número de orden válido.")
+      }
+
+      // Buscar en Redis la orden
+      const cachedStatusOrder = await redisClient.get(`order_status_${order_id}`)
+      if (cachedStatusOrder) {
+        return cachedStatusOrder
+      }
+
+      // Si no está en Redis se consulta en la base de datos
+      const [orderStatus]: any = await mysqlConnection.query(
+        "SELECT status_order.name FROM orders INNER JOIN status_order ON status_order.id = orders.status_order_id WHERE orders.id = ?",
+        [order_id]
+      )
+
+      if (!orderStatus || !orderStatus.length) {
+        throw new Error("El número de orden no existe.")
+      }
+
+      const orderStatusName = orderStatus[0].name
+
+      // Guardar en Redis el estado con expiración de 60 minutos
+      await redisClient.setEx(`order_status_${order_id}`, 3600, orderStatusName)
+
+      return orderStatusName
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+  }
+
+
 }
 

@@ -6,6 +6,9 @@ interface ServerProps {
   port?: number
   routes: Router
 }
+/**
+ * @description Clase para iniciar el servidor
+ */
 export class Server {
 
   public readonly app = express()

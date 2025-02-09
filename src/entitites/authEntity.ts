@@ -1,4 +1,4 @@
-import { UserEntity } from "./userEntity";
+import { UserEntity } from './userEntity'
 
 export class AuthEntity {
   constructor(

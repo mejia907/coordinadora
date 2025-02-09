@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+/**
+ * @description Schema para la creación de rutas
+ */
 export const routeSchema = z.object({
   name: z
     .string({ required_error: 'El nombre es obligatorio' })

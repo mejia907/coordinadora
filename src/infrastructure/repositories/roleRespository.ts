@@ -1,6 +1,9 @@
 import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
 import { RoleEntity } from '@entitites/roleEntity'
 
+/**
+ * @description Repositorio de roles
+ */
 export default class RoleRepository {
   public create = async (role: RoleEntity): Promise<RoleEntity> => {
 
@@ -10,10 +13,10 @@ export default class RoleRepository {
       const [existingUser]: any = await mysqlConnection.query(
         "SELECT name FROM roles WHERE name = ?",
         [role.name]
-      );
+      )
 
       if (existingUser.length > 0) {
-        throw new Error("El rol ya existe.");
+        throw new Error("El rol ya existe.")
       }
 
       // Guardar el rol de usuario
@@ -29,7 +32,7 @@ export default class RoleRepository {
       return { ...role, id: result.insertId, }
 
     } catch (error: Error | any) {
-      throw new Error(error.message);
+      throw new Error(error.message)
     }
   }
 }

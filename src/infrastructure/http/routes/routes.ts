@@ -5,6 +5,9 @@ import { RoleRoutes } from './roleRoutes'
 import { CarrierRoutes } from './carrierRoutes'
 import { RouteRoutes } from './routeRoutes'
 
+/**
+ * @description Rutas de la API
+ */
 export class Routes {
   static get routes(): Router {
     const router = Router()

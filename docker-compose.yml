@@ -13,14 +13,22 @@ services:
     ports:
       - ${MYSQL_PORT}:${MYSQL_DOCKER_PORT}
 
-  apiCoordinadora:
-    build: .
-    container_name: apiCoordinadora
+#  apiCoordinadora:
+#    build: .
+#    container_name: apiCoordinadora
+#    restart: always
+#    env_file: ./.env
+#    ports:
+#      - ${SERVER_PORT}:${SERVER_DOCKER_PORT}
+#    depends_on:
+#      - mysql
+#    links:
+#      - mysql*/
+  
+  redis:
+    image: redis
+    container_name: redisCoordinadora
     restart: always
     env_file: ./.env
     ports:
-      - ${SERVER_PORT}:${SERVER_DOCKER_PORT}
-    depends_on:
-      - mysql
-    links:
-      - mysql
+      - ${REDIS_PORT}:${REDIS_DOCKER_PORT}

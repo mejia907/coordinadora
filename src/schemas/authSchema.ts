@@ -1,5 +1,8 @@
 import { z } from 'zod'
 
+/**
+ * @description Schema para la autenticación de usuarios
+ */
 export const authSchema = z.object({
   email: z
     .string({ required_error: 'El correo es obligatorio' })

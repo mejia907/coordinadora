@@ -1,6 +1,9 @@
 import { createPool } from 'mysql2/promise'
 import { envs } from '@config/envs'
 
+/**
+ * @description Coneccion a MySQL
+ */
 const mysqlConnection = createPool({
   host: envs.MYSQL_HOST,
   port: envs.MYSQL_PORT,
