@@ -42,7 +42,7 @@ export default class UserRepository {
       const [existingRole]: any = await mysqlConnection.query(
         "SELECT id FROM roles WHERE id = ?",
         [user.role_id]
-      );
+      )
 
       if (!existingRole.length) {
         throw new Error("El rol no existe.")
@@ -82,13 +82,13 @@ export default class UserRepository {
       const [user]: any = await mysqlConnection.query(
         "SELECT * FROM users WHERE email = ?",
         [email]
-      );
+      )
 
       if (!user.length) {
         throw new Error("El usuario no existe.")
       }
 
-      return user[0];
+      return user[0]
     } catch (error: Error | any) {
       throw new Error(error.message)
     }
@@ -100,7 +100,7 @@ export default class UserRepository {
    */
   public comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
     try {
-      return await bcrypt.compare(password, hashedPassword);
+      return await bcrypt.compare(password, hashedPassword)
     } catch (error: Error | any) {
       throw new Error(error.message)
     }
