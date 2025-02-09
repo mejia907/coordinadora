@@ -15,7 +15,7 @@ export class OrderController {
 
   assign = async (req: Request, res: Response) => {
     await AssignRouteUseCase(Number(req.params.id), req.body.route_id, req.body.carrier_id, req.body.estimated_delivery)
-      .then(() => res.status(200).json({ success: true, message: 'Orden asignada correctamente' }))
+      .then(() => res.status(201).json({ success: true, message: 'Orden asignada correctamente' }))
       .catch((error) => {
         res.status(400).json({ message: error.message })
       })
@@ -23,7 +23,7 @@ export class OrderController {
 
   orderStatus = async (req: Request, res: Response) => {
     await GetOrderStatusUseCase(Number(req.params.id))
-      .then((order) => res.status(201).json({ success: true, message: `Orden en estado ${order}` }))
+      .then((order) => res.status(200).json({ success: true, message: `Orden en estado ${order}` }))
       .catch((error) => {
         res.status(400).json({ message: error.message })
       })
@@ -31,7 +31,7 @@ export class OrderController {
 
   orderAll = async (req: Request, res: Response) => {
     await GetOrderAllUseCase(req.body.start_date, req.body.end_date, req.body.limit, req.body.offset, req.body.status_order_id, req.body.carrier_id)
-      .then((order) => res.status(201).json(order))
+      .then((order) => res.status(200).json(order))
       .catch((error) => {
         res.status(400).json({ message: error.message })
       })

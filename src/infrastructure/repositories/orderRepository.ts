@@ -192,7 +192,10 @@ export default class OrderRepository {
   public orderAll = async (start_date: string, end_date: string, limit: number = 10, offset: number = 0, status_order_id?: number, carrier_id?: number): Promise<any> => {
 
     try {
+      //Estado de finalizado de la orden
+      const statusFinishOrder = 3
 
+      // Consulta para obtener el reporte
       let queryReport = `
           SELECT 
             ord.id AS order_id,
@@ -219,7 +222,7 @@ export default class OrderRepository {
             (SELECT COUNT(*)
             FROM orders AS ord2
             WHERE ord2.carrier_id = ord.carrier_id
-            AND ord2.status_order_id = 3) AS completed_orders
+            AND ord2.status_order_id = ${statusFinishOrder}) AS completed_orders
           FROM orders AS ord
           LEFT JOIN users AS usr ON ord.user_id = usr.id
           LEFT JOIN status_order AS status_ord ON ord.status_order_id = status_ord.id
@@ -261,8 +264,19 @@ export default class OrderRepository {
       params.push(limit);
       params.push(offset);
 
+
+      // Buscar en Redis la consulta
+      const cacheKey = `all_orders:${JSON.stringify(params)}`;
+      const cachedData = await redisClient.get(cacheKey);
+      if (cachedData) {
+        return JSON.parse(cachedData);
+      }
+
       // Ejecutar la consulta
       const [orders]: any = await mysqlConnection.query(queryReport, params);
+
+      // Guardar en Redis con expiración de 5 minutos
+      await redisClient.setEx(cacheKey, 300, JSON.stringify(orders));
 
       return orders
 
