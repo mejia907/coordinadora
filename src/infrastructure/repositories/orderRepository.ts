@@ -179,6 +179,98 @@ export default class OrderRepository {
     }
   }
 
+  /**
+   *
+   * @param start_date 
+   * @param end_date 
+   * @param limit 
+   * @param offset 
+   * @param status_order_id 
+   * @param carrier_id 
+   * @description Obtener reporte general de ordenes 
+   */
+  public orderAll = async (start_date: string, end_date: string, limit: number = 10, offset: number = 0, status_order_id?: number, carrier_id?: number): Promise<any> => {
+
+    try {
+
+      let queryReport = `
+          SELECT 
+            ord.id AS order_id,
+            usr.name AS user_name,
+            usr.email AS user_email,
+            ord.type_product,
+            ord.weight,
+            ord.amount,
+            ord.destination_address,
+            status_ord.name AS order_status,
+            car.id AS carrier_id,
+            car_usr.name AS carrier_name,
+            rout.name AS route_name,
+            rout.origin,
+            rout.destination,
+            /*Retraso en entrega*/
+            TIMESTAMPDIFF(DAY, ord.estimated_delivery, ord.actual_delivery) AS delivery_delay, 
+            /*Promedio de retraso por transportista*/
+            (SELECT AVG(TIMESTAMPDIFF(DAY, ord1.estimated_delivery, ord1.actual_delivery))
+            FROM orders AS ord1
+            WHERE ord1.carrier_id = ord.carrier_id
+            AND ord1.actual_delivery IS NOT NULL) AS avg_delivery_time_per_carrier,
+            /*Pedidos entregados por transportista*/
+            (SELECT COUNT(*)
+            FROM orders AS ord2
+            WHERE ord2.carrier_id = ord.carrier_id
+            AND ord2.status_order_id = 3) AS completed_orders
+          FROM orders AS ord
+          LEFT JOIN users AS usr ON ord.user_id = usr.id
+          LEFT JOIN status_order AS status_ord ON ord.status_order_id = status_ord.id
+          LEFT JOIN carriers AS car ON ord.carrier_id = car.id
+          LEFT JOIN users AS car_usr ON car.user_id = car_usr.id
+          LEFT JOIN routes AS rout ON ord.route_id = rout.id
+      `.trim()
+
+      // Filtros y parametros
+      const filters: string[] = [];
+      const params: any[] = [];
+
+      // Filtro para fechas
+      if (start_date && end_date) {
+        filters.push("ord.created_at BETWEEN ? AND ?");
+        params.push(start_date);
+        params.push(end_date);
+      }
+
+      // Filtro para estado de la orden
+      if (status_order_id) {
+        filters.push("ord.status_order_id = ?");
+        params.push(status_order_id);
+      }
+
+      // Filtro para transportista
+      if (carrier_id) {
+        filters.push("ord.carrier_id = ?");
+        params.push(carrier_id);
+      }
+
+      // Concatenar los filtros
+      if (filters.length > 0) {
+        queryReport += " WHERE " + filters.join(" AND ");
+      }
+
+      // Ordenar y limitar
+      queryReport += " ORDER BY ord.created_at DESC LIMIT ? OFFSET ?";
+      params.push(limit);
+      params.push(offset);
+
+      // Ejecutar la consulta
+      const [orders]: any = await mysqlConnection.query(queryReport, params);
+
+      return orders
+
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
+
+  }
 
 }
 
