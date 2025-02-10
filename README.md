@@ -10,11 +10,13 @@ Este documento describe los pasos para instalar y configurar un contenedor Docke
 - Clonar el repositorio del proyecto:
 ```sh
 git clone https://github.com/mejia907/coordinadora.git
-cd proyecto
+cd coordinadora
 ```
 
 ### 2. Configurar Variables de Entorno
-Antes de iniciar los contenedores, es necesario definir las variables de entorno en un archivo `.env`. Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
+Antes de iniciar los contenedores, es necesario definir las variables de entorno en un archivo `.env`. 
+
+Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
 
 #### Configuración de MYSQL
 MYSQL_PORT=3306<br>
@@ -47,4 +49,4 @@ docker-compose up -d --build
 ```
 
 ### Archivo SQL
-Se encuentra en la ruta /mysql-init/init.sql, el cual contiene las estructuras de las tablas y registro de datos iniciales para poder ejecutar API
+Se encuentra en la ruta `/mysql-init/init.sql`, el cual contiene las estructuras de las tablas y registro de datos iniciales para poder ejecutar API
