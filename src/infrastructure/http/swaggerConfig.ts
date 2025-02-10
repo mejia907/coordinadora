@@ -114,6 +114,14 @@ const options: swaggerJSDoc.Options = {
             carrier_id: { type: "number", example: 1 },
           },
         },
+        EndRoute: {
+          title: "Terminar ruta",
+          type: "object",
+          required: ["actual_delivery"],
+          properties: {
+            actual_delivery: { type: "string", example: "2025-01-01", format: "YYYY-MM-DD" },
+          },
+        },
         Carrier: {
           title: "Crear transportista",
           type: "object",

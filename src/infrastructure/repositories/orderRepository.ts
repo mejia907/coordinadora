@@ -141,6 +141,57 @@ export default class OrderRepository {
     }
   }
 
+  public endRoute = async (order_id: number, actual_delivery: Date): Promise<void> => {
+    try {
+
+      if (!order_id || isNaN(order_id)) {
+        throw new Error("Debe definir el número de orden.")
+      }
+
+      // Verificar si la orden existe
+      const [existingOrder]: any = await mysqlConnection.query(
+        "SELECT id, status_order_id FROM orders WHERE id = ?",
+        [order_id]
+      )
+
+      if (!existingOrder.length || isNaN(order_id)) {
+        throw new Error("El número de orden no existe.")
+      }
+
+      // Verificar si la orden se encuentra en ruta
+      if (existingOrder[0].status_order_id !== 2) {
+        throw new Error("La orden no se encuentra en ruta.")
+      }
+
+      // Verificar si la fecha de entrega es menor a la fecha actual
+      if (new Date(actual_delivery) < new Date()) {
+        throw new Error("La fecha de entrega no puede ser menor a la fecha actual.")
+      }
+
+      // Actualizar la orden con la fecha real de entrega
+      const [result]: any = await mysqlConnection.query(
+        `UPDATE orders 
+        SET
+        actual_delivery = ?,
+        status_order_id = ?
+        WHERE id = ?`,
+        [
+          actual_delivery,
+          3, // "Entregado"
+          order_id
+        ]
+      )
+
+      if (result.affectedRows > 0) {
+        // Guardar en Redis le estado con expiración de 60 minutos
+        await redisClient.setEx(`order_status_${order_id}`, 3600, "Entregado")
+      }
+
+    } catch (error: Error | any) {
+      throw new Error(error.message)
+    }
+  }
+  
   /**
    * @param order_id 
    * @description Obtener el estado de una orden

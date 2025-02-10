@@ -3,6 +3,7 @@ import { CreateOrderUseCase } from '../application/useCases/createOrderUseCase'
 import { AssignRouteUseCase } from '../application/useCases/assignRouteUseCase'
 import { GetOrderStatusUseCase } from '../application/useCases/getOrderStatusUseCase'
 import { GetOrderAllUseCase } from '../application/useCases/getOrderAllUseCase'
+import { EndRouteUseCase } from '../application/useCases/endRouteUseCase'
 
 export class OrderController {
   create = async (req: Request, res: Response) => {
@@ -16,6 +17,14 @@ export class OrderController {
   assign = async (req: Request, res: Response) => {
     await AssignRouteUseCase(Number(req.params.id), req.body.route_id, req.body.carrier_id, req.body.estimated_delivery)
       .then(() => res.status(201).json({ success: true, message: 'Orden asignada correctamente' }))
+      .catch((error) => {
+        res.status(400).json({ message: error.message })
+      })
+  }
+
+  end = async (req: Request, res: Response) => {
+    await EndRouteUseCase(Number(req.params.id), req.body.actual_delivery)
+      .then(() => res.status(201).json({ success: true, message: 'Orden entregada correctamente' }))
       .catch((error) => {
         res.status(400).json({ message: error.message })
       })

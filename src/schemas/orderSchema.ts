@@ -39,3 +39,15 @@ export const assignRouteSchema = z.object({
       return dateRegex.test(value)
     }, { message: 'La fecha estimada de entrega debe ser en el formato YYYY-MM-DD' }),
 })
+
+/**
+ * @description Schema para finalizar rutas
+ */
+export const endRouteSchema = z.object({
+  actual_delivery: z
+    .string({ required_error: 'La fecha de entrega es obligatoria' })
+    .refine((value) => {
+      const dateRegex = /((?:19|20)[0-9][0-9])-(0?[1-9]|1[012])-(0?[1-9]|[12][0-9]|3[01])/
+      return dateRegex.test(value)
+    }, { message: 'La fecha de entrega debe ser en el formato YYYY-MM-DD' }),
+})
