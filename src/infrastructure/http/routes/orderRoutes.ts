@@ -70,7 +70,7 @@ export class OrderRoutes {
      *             $ref: '#/components/schemas/AssignOrder'
      *     responses:
      *       200:
-     *         description: Orden asignada exitosamente
+     *         description: Orden asignada correctamente
      *       400:
      *         description: Datos inválidos
      *       404:
@@ -102,7 +102,7 @@ export class OrderRoutes {
      *             $ref: '#/components/schemas/EndRoute'
      *     responses:
      *       200:
-     *         description: Orden finalizada exitosamente
+     *         description: Orden entregada correctamente
      *       400:
      *         description: Datos inválidos
      *       404:
