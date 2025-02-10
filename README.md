@@ -16,7 +16,7 @@ cd proyecto
 ### 2. Configurar Variables de Entorno
 Antes de iniciar los contenedores, es necesario definir las variables de entorno en un archivo `.env`. Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
 
-### Configuración de MYSQL
+#### Configuración de MYSQL
 MYSQL_PORT=3306<br>
 MYSQL_DOCKER_PORT=3306<br>
 MYSQL_HOST='localhost'<br>
@@ -26,14 +26,14 @@ MYSQL_USER='coordinadora'<br>
 MYSQL_PASSWORD='coordinadora'<br>
 MYSQL_DATABASE='coordinadora'<br>
 
-### Configuración del servidor
+#### Configuración del servidor
 SERVER_PORT=3000<br>
 SERVER_DOCKER_PORT=3000<br>
 
-### JWT Token de acceso
+#### JWT Token de acceso
 JWT_SECRET=/#coordinadora#/
 
-### Configuración de Redis
+#### Configuración de Redis
 REDIS_HOST='localhost'<br>
 REDIS_PORT=6379<br>
 REDIS_DOCKER_HOST='redis'<br>
