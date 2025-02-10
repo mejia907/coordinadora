@@ -17,27 +17,27 @@ cd proyecto
 Antes de iniciar los contenedores, es necesario definir las variables de entorno en un archivo `.env`. Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
 
 ### Configuración de MYSQL
-MYSQL_PORT=3306/
-MYSQL_DOCKER_PORT=3306/
-MYSQL_HOST='localhost'/
-MYSQL_DOCKER_HOST='mysql'/
-MYSQL_ROOT_PASSWORD='root'/
-MYSQL_USER='coordinadora'/
-MYSQL_PASSWORD='coordinadora'/
-MYSQL_DATABASE='coordinadora'/
+MYSQL_PORT=3306<br>
+MYSQL_DOCKER_PORT=3306<br>
+MYSQL_HOST='localhost'<br>
+MYSQL_DOCKER_HOST='mysql'<br>
+MYSQL_ROOT_PASSWORD='root'<br>
+MYSQL_USER='coordinadora'<br>
+MYSQL_PASSWORD='coordinadora'<br>
+MYSQL_DATABASE='coordinadora'<br>
 
 ### Configuración del servidor
-SERVER_PORT=3000
-SERVER_DOCKER_PORT=3000
+SERVER_PORT=3000<br>
+SERVER_DOCKER_PORT=3000<br>
 
 ### JWT Token de acceso
 JWT_SECRET=/#coordinadora#/
 
 ### Configuración de Redis
-REDIS_HOST='localhost'
-REDIS_PORT=6379
-REDIS_DOCKER_HOST='redis'
-REDIS_DOCKER_PORT=6379
+REDIS_HOST='localhost'<br>
+REDIS_PORT=6379<br>
+REDIS_DOCKER_HOST='redis'<br>
+REDIS_DOCKER_PORT=6379<br>
 
 ### 3. Levantar los Contenedores
 Para iniciar los contenedores, ejecuta el siguiente comando:
