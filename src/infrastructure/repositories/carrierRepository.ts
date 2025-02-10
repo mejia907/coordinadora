@@ -23,11 +23,10 @@ export default class CarrierRepository {
       // Guardar el transportista
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO carriers 
-        (user_id, licencePlate) 
-        VALUES (?, ?)`,
+        (user_id) 
+        VALUES (?)`,
         [
           carrier.user_id,
-          carrier.licencePlate
         ]
       )
 

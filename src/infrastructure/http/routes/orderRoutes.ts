@@ -112,7 +112,7 @@ export class OrderRoutes {
 
     /**
      * @swagger
-     * /order/status/{id}:
+     * /order/status/{tracking}:
      *   get:
      *     summary: Obtener el estado de una orden
      *     description: Devuelve el estado actual de una orden específica. Requiere autenticación.
@@ -121,18 +121,18 @@ export class OrderRoutes {
      *       - BearerAuth: []
      *     parameters:
      *       - in: path
-     *         name: id
+     *         name: tracking
      *         schema:
      *           type: string
      *         required: true
-     *         description: ID de la orden
+     *         description: Guia de entrega de la orden
      *     responses:
      *       200:
      *         description: Estado de la orden obtenido exitosamente
      *       404:
-     *         description: Orden no encontrada
+     *         description: Guia no encontrada
      */
-    router.get('/status/:id', authRequired, orderController.orderStatus)
+    router.get('/status/:tracking', authRequired, orderController.orderStatus)
 
 
     /**

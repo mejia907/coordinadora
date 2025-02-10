@@ -16,7 +16,7 @@ cd proyecto
 ### 2. Configurar Variables de Entorno
 Antes de iniciar los contenedores, es necesario definir las variables de entorno en un archivo `.env`. Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
 
-#Configuración de MYSQL
+### Configuración de MYSQL
 MYSQL_PORT=3306
 MYSQL_DOCKER_PORT=3306
 MYSQL_HOST='localhost'
@@ -26,14 +26,14 @@ MYSQL_USER='coordinadora'
 MYSQL_PASSWORD='coordinadora'
 MYSQL_DATABASE='coordinadora'
 
-#Configuración del servidor
+### Configuración del servidor
 SERVER_PORT=3000
 SERVER_DOCKER_PORT=3000
 
-#JWT Token de acceso
+### JWT Token de acceso
 JWT_SECRET=/*coordinadora*/
 
-#Configuración de Redis
+### Configuración de Redis
 REDIS_HOST='localhost'
 REDIS_PORT=6379
 REDIS_DOCKER_HOST='redis'
@@ -45,3 +45,6 @@ Para iniciar los contenedores, ejecuta el siguiente comando:
 ```sh
 docker-compose up -d --build
 ```
+
+### Archivo SQL
+Se encuentra en la ruta /mysql-init/init.sql, el cual contiene las estructuras de las tablas y registro de datos iniciales para poder ejecutar API

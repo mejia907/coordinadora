@@ -7,9 +7,9 @@ import OrderRepository from '../../infrastructure/repositories/orderRepository'
  * @param estimated_delivery 
  * @description UseCase para asignar una ruta a una orden
  */
-async function AssignRouteUseCase(order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> {
+async function AssignRouteUseCase(user_id : number,order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> {
   const orderRepository = new OrderRepository()
-  return await orderRepository.assignRoute(order_id, route_id, carrier_id, estimated_delivery)
+  return await orderRepository.assignRoute(user_id, order_id, route_id, carrier_id, estimated_delivery)
 }
 
 export { AssignRouteUseCase }

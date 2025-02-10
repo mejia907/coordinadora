@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
-interface CustomRequest extends Request {
-  user?: any 
+export interface CustomRequest extends Request {
+  user?: { user_id: number };
 }
 
 /**
@@ -21,11 +21,11 @@ export const authRequired = (req: CustomRequest, res: Response, next: NextFuncti
 
   try {
     // Verificar el token
-    const decodedJwt = jwt.verify(token, process.env.JWT_SECRET as string)
-    req.user = decodedJwt
+    const decodedJwt = jwt.verify(token, process.env.JWT_SECRET as string) as { user_id: number };
+    req.user = { user_id: decodedJwt.user_id };
     next()
   } catch (error) {
     res.status(403).json({ message: "Token inválido" })
-    return 
+    return
   }
 }

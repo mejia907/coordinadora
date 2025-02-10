@@ -8,8 +8,6 @@ enum TypeProduct {
  * @description Schema para la creación de ordenes
  */
 export const orderSchema = z.object({
-  user_id: z
-    .number({ required_error: 'El código del usuario es obligatorio', invalid_type_error: 'El código del usuario debe ser un número' }),
   type_product: z
     .nativeEnum(TypeProduct, { errorMap: () => ({ message: 'El tipo del producto es obligatorio y debe ser PAQUETES ó DOCUMENTOS' }) }),
   weight: z
@@ -24,6 +22,16 @@ export const orderSchema = z.object({
     .number({ required_error: 'La cantidad es obligatoria', invalid_type_error: 'La cantidad debe ser un número' }),
   destination_address: z
     .string({ required_error: 'La dirección es obligatoria' }),
+  contact_receive: z
+    .string({ required_error: 'El nombre de quien recibe es obligatorio' }),
+  contact_phone: z
+    .string({ required_error: 'El teléfono de quien recibe es obligatorio' }).min(8, { message: 'El teléfono de quien recibe debe tener al menos 8 caracteres' }),
+  description_content: z
+    .string({ required_error: 'La descripción del contenido es obligatorio' }).min(3, { message: 'La descripción del contenido debe tener al menos 3 caracteres' }),
+  declared_value: z
+    .number({ required_error: 'El valor declarado es obligatorio', invalid_type_error: 'El valor declarado debe ser un número' }),
+  notes_delivery: z
+    .string({ required_error: 'Las observaciones de la entrega es obligatoria' }).min(3, { message: 'Las observaciones de la entrega debe tener al menos 3 caracteres' }),
 })
 
 /**

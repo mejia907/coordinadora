@@ -7,14 +7,14 @@ import redisClient from '../../infrastructure/cache/redisClient'
  * @description Repositorio de ordenes
  */
 export default class OrderRepository {
-  public create = async (order: OrderEntity): Promise<OrderEntity> => {
+  public create = async (user_id: number, order: OrderEntity): Promise<OrderEntity> => {
 
     try {
 
       // Verificar si el usuario existe
       const [existingUser]: any = await mysqlConnection.query(
         "SELECT id FROM users WHERE id = ?",
-        [order.user_id]
+        [user_id]
       )
 
       if (!existingUser.length) {
@@ -39,13 +39,16 @@ export default class OrderRepository {
         order.status_order_id = 1
       }
 
+      // Generar el numero de guia
+      order.guide_order = Math.floor(1000000000 + Math.random() * 9000000000).toString();
+
       // Guardar la orden
       const [result]: any = await mysqlConnection.query(
         `INSERT INTO orders 
-        (user_id, type_product, weight, dimension_long, dimension_tall, dimension_width, amount, destination_address, status_order_id) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+        (user_id, type_product, weight, dimension_long, dimension_tall, dimension_width, amount, destination_address, contact_receive, contact_phone, description_content, declared_value, notes_delivery, guide_order, status_order_id) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
-          order.user_id,
+          user_id,
           order.type_product,
           order.weight,
           order.dimension_long,
@@ -53,6 +56,12 @@ export default class OrderRepository {
           order.dimension_width,
           order.amount,
           order.destination_address,
+          order.contact_receive,
+          order.contact_phone,
+          order.description_content,
+          order.declared_value,
+          order.notes_delivery,
+          order.guide_order,
           order.status_order_id,
         ]
       )
@@ -71,11 +80,26 @@ export default class OrderRepository {
    * @param estimated_delivery 
    * @description Asignar una ruta a una orden
    */
-  public assignRoute = async (order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> => {
+  public assignRoute = async (user_id: number, order_id: number, route_id: number, carrier_id: number, estimated_delivery: Date): Promise<void> => {
     try {
 
       if (!order_id || isNaN(order_id)) {
         throw new Error("Debe definir el número de orden.")
+      }
+
+      // Verificar si el usuario existe y es un administrador
+      const [existingUser]: any = await mysqlConnection.query(
+        "SELECT roles.id FROM users INNER JOIN roles ON users.role_id = roles.id WHERE users.id = ?",
+        [user_id]
+      )
+
+      if (!existingUser.length) {
+        throw new Error("El usuario no existe.")
+      }
+
+      //// Verificar si el usuario es un administrador
+      if (existingUser[0].id !== 1) {
+        throw new Error("El usuario no es administrador.")
       }
 
       // Verificar si la orden existe
@@ -88,14 +112,11 @@ export default class OrderRepository {
         throw new Error("El número de orden no existe.")
       }
 
-      // Verificar si la ruta existe
-      const [existingRoute]: any = await mysqlConnection.query(
-        "SELECT id FROM routes WHERE id = ?",
-        [route_id]
-      )
+      // Verificar si la ruta existe para un transportista
+      const existingRoute = await this.disponibility(route_id, carrier_id)
 
       if (!existingRoute.length) {
-        throw new Error("La ruta no existe.")
+        throw new Error("No hay rutas disponibles para ese transportista en esa ruta.")
       }
 
       // Verificar si la fecha estimada de entrega es menor a la fecha actual
@@ -103,7 +124,7 @@ export default class OrderRepository {
         throw new Error("La fecha estimada de entrega no puede ser menor a la fecha actual.")
       }
 
-      // Verificar si el transportista existe
+      // Verificar si el transportista existe y esta disponible
       const [existingCarrier]: any = await mysqlConnection.query(
         "SELECT availability FROM carriers WHERE id = ?",
         [carrier_id]
@@ -141,6 +162,11 @@ export default class OrderRepository {
     }
   }
 
+  /**
+   * @param order_id 
+   * @param actual_delivery 
+   * @description Finalizar una orden
+   */
   public endRoute = async (order_id: number, actual_delivery: Date): Promise<void> => {
     try {
 
@@ -191,40 +217,38 @@ export default class OrderRepository {
       throw new Error(error.message)
     }
   }
-  
+
   /**
    * @param order_id 
-   * @description Obtener el estado de una orden
+   * @description Obtener el estado de una orden por número de guia
    */
-  public getOrderStatus = async (order_id: number): Promise<string> => {
+  public getOrderStatus = async (tracking_order: number): Promise<any> => {
     try {
 
-      if (!order_id || isNaN(order_id)) {
-        throw new Error("Debe definir un número de orden válido.")
+      if (!tracking_order || isNaN(tracking_order)) {
+        throw new Error("Debe definir un número de guia válido.")
       }
 
       // Buscar en Redis la orden
-      const cachedStatusOrder = await redisClient.get(`order_status_${order_id}`)
+      const cachedStatusOrder = await redisClient.get(`order_status_${tracking_order}`)
       if (cachedStatusOrder) {
-        return cachedStatusOrder
+        return JSON.parse(cachedStatusOrder)
       }
 
       // Si no está en Redis se consulta en la base de datos
       const [orderStatus]: any = await mysqlConnection.query(
-        "SELECT status_order.name FROM orders INNER JOIN status_order ON status_order.id = orders.status_order_id WHERE orders.id = ?",
-        [order_id]
+        "SELECT orders.guide_order, status_order.name,routes.origin, routes.destination, orders.estimated_delivery, users.name AS carrier_name, orders.weight, orders.declared_value FROM orders INNER JOIN status_order ON status_order.id = orders.status_order_id INNER JOIN routes ON routes.id = orders.route_id INNER JOIN users ON users.id = orders.carrier_id WHERE orders.guide_order = ?",
+        [tracking_order]
       )
 
       if (!orderStatus || !orderStatus.length) {
-        throw new Error("El número de orden no existe.")
+        throw new Error("El número de guia no existe.")
       }
 
-      const orderStatusName = orderStatus[0].name
-
       // Guardar en Redis el estado con expiración de 60 minutos
-      await redisClient.setEx(`order_status_${order_id}`, 3600, orderStatusName)
+      await redisClient.setEx(`order_status_${tracking_order}`, 3600, JSON.stringify(orderStatus))
 
-      return orderStatusName
+      return orderStatus
     } catch (error: any) {
       throw new Error(error.message)
     }
@@ -250,12 +274,18 @@ export default class OrderRepository {
       let queryReport = `
           SELECT 
             ord.id AS order_id,
+            ord.guide_order,
             usr.name AS user_name,
             usr.email AS user_email,
             ord.type_product,
             ord.weight,
             ord.amount,
             ord.destination_address,
+            ord.contact_receive,
+            ord.contact_phone,
+            ord.description_content,
+            ord.declared_value,
+            ord.notes_delivery,
             status_ord.name AS order_status,
             car.id AS carrier_id,
             car_usr.name AS carrier_name,
@@ -329,12 +359,67 @@ export default class OrderRepository {
       // Guardar en Redis con expiración de 5 minutos
       await redisClient.setEx(cacheKey, 300, JSON.stringify(orders));
 
+      if (!orders || !orders.length) {
+        throw new Error("No se encontraron ordenes.")
+      }
+
       return orders
 
     } catch (error: any) {
       throw new Error(error.message)
     }
 
+  }
+
+  /**
+   * @param route_id 
+   * @param carrier_id 
+   * @description Obtener disponibilidad de transportistas
+   */
+  public disponibility = async (route_id: number, carrier_id: number): Promise<any> => {
+    try {
+
+      let query = `
+      SELECT carriers.id AS carrier_id, 
+            usr.name AS carrier_name, 
+            veh.licence_plate, 
+            veh.model AS vehicle_model, 
+            veh.type AS vehicle_type, 
+            veh.capacity_kg, 
+            rou.id AS route_id, 
+            rou.name AS route_name, 
+            carriers.availability 
+      FROM carriers 
+      JOIN users AS usr ON carriers.user_id = usr.id
+      JOIN carriers_vehicles AS car_veh ON carriers.id = car_veh.carrier_id
+      JOIN vehicles AS veh ON car_veh.vehicle_id = veh.id
+      JOIN carriers_routes AS car_rou ON carriers.id = car_rou.carrier_id
+      JOIN routes AS rou ON car_rou.route_id = rou.id
+      WHERE carriers.availability = TRUE
+      AND rou.id = ? AND carriers.id = ?`.trim()
+
+      // Buscar en Redis la orden
+      const cachedDisponibilityCarrier = await redisClient.get(`carrier_disponibility_${route_id}_${carrier_id}`)
+      if (cachedDisponibilityCarrier) {
+        return cachedDisponibilityCarrier
+      }
+
+      // Buscar la disponibilidad del transportista
+      const [carrier]: any = await mysqlConnection.query(query, [route_id, carrier_id])
+
+      // Verificar si hay transportistas disponibles
+      if (!Array.isArray(carrier) || carrier.length === 0) {
+        return [];
+      }
+
+      // Guardar en Redis el estado con expiración de 5 minutos
+      await redisClient.setEx(`carrier_disponibility_${route_id}_${carrier_id}`, 300, JSON.stringify(carrier))
+
+      return carrier
+
+    } catch (error: any) {
+      throw new Error(error.message)
+    }
   }
 
 }

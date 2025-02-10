@@ -1,8 +1,10 @@
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 import { mysqlConnection } from '../../infrastructure/db/mysqlConnection'
 import { UserEntity } from '../../entities/userEntity'
-
+import { envs } from '../../config/envs'
+import { AuthEntity } from 'entities/authEntity'
 /**
  * @description Repositorio de usuarios
  */
@@ -32,7 +34,7 @@ export default class UserRepository {
       )
 
       if (existingDocument.length > 0) {
-        throw new Error("El número de documento ya existe.")
+        throw new Error("El número de documento ya se encuentra registrado.")
       }
 
       // Cifrar la contraseña antes de guardarla
@@ -66,7 +68,10 @@ export default class UserRepository {
         ]
       )
 
-      return { ...user, id: result.insertId, }
+      // Retornar usuario SIN la contraseña
+      const userWithoutPassword = { ...user, password: '' }
+
+      return { ...userWithoutPassword, id: result.insertId, }
 
     } catch (error: Error | any) {
       throw new Error(error.message)
@@ -101,6 +106,51 @@ export default class UserRepository {
   public comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
     try {
       return await bcrypt.compare(password, hashedPassword)
+    } catch (error: Error | any) {
+      throw new Error(error.message)
+    }
+  }
+
+  /**
+   * @param email 
+   * @param password 
+   * @description Autenticación de usuarios
+   */
+  login = async (email: string, password: string): Promise<AuthEntity | null> => {
+    try {
+      const user = await this.findByEmail(email)
+
+      if (!user) {
+        throw new Error("El usuario no existe.")
+      }
+
+      // Verificar si el usuario esta activo
+      if (!user.status) {
+        throw new Error('El usuario esta inactivo.')
+      }
+
+      // Verificar si la contraseña es correcta
+      const isPasswordValid = await this.comparePassword(password, user.password)
+
+      if (!isPasswordValid) {
+        throw new Error("La contraseña es incorrecta.")
+      }
+
+      // Generar el token con la informacion del usuario
+      const token = jwt.sign(
+        { user_id: user.id, role: user.role_id },
+        envs.JWT_SECRET ?? '',
+        { expiresIn: "2h" }
+      )
+
+      if (!token) {
+        throw new Error('No se pudo generar el token')
+      }
+      // Retornar usuario SIN la contraseña
+      const userWithoutPassword = { ...user, password: '' }
+
+      return { token, user: userWithoutPassword }
+
     } catch (error: Error | any) {
       throw new Error(error.message)
     }

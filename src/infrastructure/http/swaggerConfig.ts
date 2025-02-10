@@ -41,7 +41,7 @@ const options: swaggerJSDoc.Options = {
             address: { type: "string", example: "calle 34 #54-87" },
             phone: { type: "string", example: "88898797" },
             role_id: { type: "number", example: 1 },
-            status: { type: "boolean", example: 1 },
+            status: { type: "boolean", example: true },
             password: { type: "string", example: "12345678" },
           },
         },
@@ -62,8 +62,8 @@ const options: swaggerJSDoc.Options = {
             name: { type: "string", example: "andres@coordinadora.com" },
             origin: { type: "string", example: "calle 34 #54-87" },
             destination: { type: "string", example: "calle 34 #54-87" },
-            distance_km: { type: "number", example: 1 },
-            estimated_time: { type: "number", example: 1 },
+            distance_km: { type: "number", example: 18 },
+            estimated_time: { type: "number", example: 2 },
             status: { type: "boolean", example: 1 },
           },
         },
@@ -79,9 +79,8 @@ const options: swaggerJSDoc.Options = {
         Order: {
           title: "Crear orden",
           type: "object",
-          required: ["user_id", "type_product", "weight", "dimension_long", "dimension_tall", "dimension_width", "amount", "destination_address"],
+          required: ["type_product", "weight", "dimension_long", "dimension_tall", "dimension_width", "amount", "destination_address", "contact_receive", "contact_phone", "description_content", "declared_value", "notes_delivery"],
           properties: {
-            user_id: { type: "number", example: 1 },
             type_product: { type: "string", example: "PAQUETES", enum: ["PAQUETES", "DOCUMENTOS"] },
             weight: { type: "number", example: 8 },
             dimension_long: { type: "number", example: 12 },
@@ -89,6 +88,11 @@ const options: swaggerJSDoc.Options = {
             dimension_width: { type: "number", example: 15 },
             amount: { type: "number", example: 1 },
             destination_address: { type: "string", example: "calle 34 #54-87" },
+            contact_receive: { type: "string", example: "Andrés Felipe Mejía" },
+            contact_phone: { type: "string", example: "88898797" },
+            description_content: { type: "string", example: "Descripción del contenido" },
+            declared_value: { type: "number", example: 1000 },
+            notes_delivery: { type: "string", example: "Notas de entrega" },
           },
         },
         AssignOrder: {
@@ -125,10 +129,9 @@ const options: swaggerJSDoc.Options = {
         Carrier: {
           title: "Crear transportista",
           type: "object",
-          required: ["user_id", "licencePlate"],
+          required: ["user_id"],
           properties: {
             user_id: { type: "number", example: 1 },
-            licencePlate: { type: "string", example: "ABC123" },
           },
         }
       },
