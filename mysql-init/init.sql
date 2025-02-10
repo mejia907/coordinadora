@@ -39,14 +39,14 @@ CREATE TABLE status_order (
 
 -- Tabla de transportista (conductores que llevan los pedidos)
 CREATE TABLE carriers (
-    id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Identificador único del mensajero',
-    user_id INT NOT NULL COMMENT 'Identificador del usuario que es mensajero',
-    licencePlate VARCHAR(50) COMMENT 'Modelo o tipo de vehículo del mensajero',
-    availability BOOLEAN DEFAULT TRUE COMMENT 'Indica si el mensajero está disponible para asignaciones',
+    id INT AUTO_INCREMENT PRIMARY KEY COMMENT 'Identificador único del transportista',
+    user_id INT NOT NULL COMMENT 'Identificador del usuario que es transportista',
+    licencePlate VARCHAR(50) COMMENT 'Modelo o tipo de vehículo del transportista',
+    availability BOOLEAN DEFAULT TRUE COMMENT 'Indica si el transportista está disponible para asignaciones',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT 'Fecha de creación del registro',
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Fecha de última actualización',
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE RESTRICT ON UPDATE CASCADE
-) COMMENT='Tabla que almacena información de los mensajeros';
+) COMMENT='Tabla que almacena información de los transportistas';
 
 -- Tabla para las rutas
 CREATE TABLE routes (

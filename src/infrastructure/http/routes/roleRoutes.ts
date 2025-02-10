@@ -13,6 +13,30 @@ export class RoleRoutes {
     const router = Router()
     const roleController = new RoleController()
     
+    /**
+     * @swagger
+     * /role:
+     *   post:
+     *     summary: Crear un nuevo rol
+     *     description: Crea un nuevo rol en la base de datos. Requiere autenticación con token Bearer.
+     *     tags:
+     *       - Roles
+     *     security:
+     *       - BearerAuth: []
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             $ref: '#/components/schemas/Role'
+     *     responses:
+     *       201:
+     *         description: Rol creado exitosamente
+     *       400:
+     *         description: Datos inválidos en la solicitud
+     *       401:
+     *         description: No autorizado, token inválido
+     */    
     router.post('/', authRequired, validateSchema(roleSchema), roleController.create)
 
     return router

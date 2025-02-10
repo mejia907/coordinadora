@@ -1,6 +1,7 @@
 import express, { Router } from 'express'
 import morgan from 'morgan'
 import cookieParser from 'cookie-parser'
+import { setupSwagger } from './swaggerConfig'
 
 interface ServerProps {
   port?: number
@@ -28,6 +29,9 @@ export class Server {
     this.app.use(express.urlencoded({ extended: true })) // Parsea el cuerpo de la solicitud
 
     this.app.use(this.routes) // Rutas
+
+    // Configuración de Swagger
+    setupSwagger(this.app)
 
     // Inicia el servidor
     this.app.listen(this.port, () => {

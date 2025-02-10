@@ -30,7 +30,7 @@ export const orderSchema = z.object({
  * @description Schema para la asignación de rutas
  */
 export const assignRouteSchema = z.object({
-  carrier_id: z.number({ required_error: 'El código del mensajero es obligatorio', invalid_type_error: 'El código del mensajero debe ser un número' }).int().positive(),
+  carrier_id: z.number({ required_error: 'El código del transportista es obligatorio', invalid_type_error: 'El código del transportista debe ser un número' }).int().positive(),
   route_id: z.number({ required_error: 'El código de la ruta es obligatorio', invalid_type_error: 'El código de la ruta debe ser un número' }).int().positive(),
   estimated_delivery: z
     .string({ required_error: 'La fecha estimada de entrega es obligatoria' })
