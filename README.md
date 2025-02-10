@@ -16,7 +16,7 @@ cd coordinadora
 ### 2. Configurar Variables de Entorno
 Antes de iniciar los contenedores, es necesario definir las variables de entorno en un archivo `.env`. 
 
-Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
+- Crea un archivo `.env` en la raíz del proyecto y agrega lo siguiente:
 
 #### Configuración de MYSQL
 MYSQL_PORT=3306<br>
