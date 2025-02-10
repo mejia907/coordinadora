@@ -1,6 +1,6 @@
-import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
-import { OrderEntity } from '@entitites/orderEntity'
-import redisClient from '@infrastructure/cache/redisClient'
+import { mysqlConnection } from '../../infrastructure/db/mysqlConnection'
+import { OrderEntity } from '../../entities/orderEntity'
+import redisClient from '../../infrastructure/cache/redisClient'
 
 /**
  * @param order

@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { OrderController } from '@controllers/orderController'
-import { validateSchema } from '@infrastructure/http/middelwares/validateSchema'
-import { assignRouteSchema, orderSchema } from '@schemas/orderSchema'
-import { authRequired } from '@infrastructure/http/middelwares/authRequired'
-import { orderAllSchema } from '@schemas/orderAllSchema'
+import { OrderController } from '../../../controllers/orderController'
+import { validateSchema } from '../../../infrastructure/http/middelwares/validateSchema'
+import { assignRouteSchema, orderSchema } from '../../../schemas/orderSchema'
+import { authRequired } from '../../../infrastructure/http/middelwares/authRequired'
+import { orderAllSchema } from '../../../schemas/orderAllSchema'
 
 /**
  * @description Rutas de ordenes

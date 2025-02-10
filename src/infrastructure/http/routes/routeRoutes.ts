@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { RouteController } from '@controllers/routeController'
-import { validateSchema } from '@infrastructure/http/middelwares/validateSchema'
-import { routeSchema } from '@schemas/routeSchema'
-import { authRequired } from '@infrastructure/http/middelwares/authRequired'
+import { RouteController } from '../../../controllers/routeController'
+import { validateSchema } from '../../../infrastructure/http/middelwares/validateSchema'
+import { routeSchema } from '../../../schemas/routeSchema'
+import { authRequired } from '../../../infrastructure/http/middelwares/authRequired'
 
 /**
  * @description Rutas de rutas den envio

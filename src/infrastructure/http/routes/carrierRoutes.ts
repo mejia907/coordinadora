@@ -1,8 +1,8 @@
 import { Router } from 'express'
-import { CarrierController } from '@controllers/carrierController'
-import { validateSchema } from '@infrastructure/http/middelwares/validateSchema'
-import { carrierSchema } from '@schemas/carrierSchema'
-import { authRequired } from '@infrastructure/http/middelwares/authRequired'
+import { CarrierController } from '../../../controllers/carrierController'
+import { validateSchema } from '../../../infrastructure/http/middelwares/validateSchema'
+import { carrierSchema } from '../../../schemas/carrierSchema'
+import { authRequired } from '../../../infrastructure/http/middelwares/authRequired'
 
 /**
  * @description Rutas de transportistas

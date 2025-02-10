@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { CreateOrderUseCase } from '@application/useCases/createOrderUseCase'
-import { AssignRouteUseCase } from '@application/useCases/assignRouteUseCase'
-import { GetOrderStatusUseCase } from '@application/useCases/getOrderStatusUseCase'
-import { GetOrderAllUseCase } from '@application/useCases/getOrderAllUseCase'
+import { CreateOrderUseCase } from '../application/useCases/createOrderUseCase'
+import { AssignRouteUseCase } from '../application/useCases/assignRouteUseCase'
+import { GetOrderStatusUseCase } from '../application/useCases/getOrderStatusUseCase'
+import { GetOrderAllUseCase } from '../application/useCases/getOrderAllUseCase'
 
 export class OrderController {
   create = async (req: Request, res: Response) => {

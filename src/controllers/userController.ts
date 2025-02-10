@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { CreateUserUseCase } from '@application/useCases/createUserUseCase'
-import { LoginUserUseCase } from '@application/useCases/loginUserUseCase'
+import { CreateUserUseCase } from '../application/useCases/createUserUseCase'
+import { LoginUserUseCase } from '../application/useCases/loginUserUseCase'
 
 /**
  * @description Controlador para el manejo de usuarios

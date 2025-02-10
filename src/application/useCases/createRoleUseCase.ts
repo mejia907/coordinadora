@@ -1,5 +1,5 @@
-import RoleRepository from '@infrastructure/repositories/roleRespository'
-import { RoleEntity } from '@entitites/roleEntity'
+import RoleRepository from '../../infrastructure/repositories/roleRespository'
+import { RoleEntity } from '../../entities/roleEntity'
 
 /**
  * @param role 

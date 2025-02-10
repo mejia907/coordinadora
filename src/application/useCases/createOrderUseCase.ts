@@ -1,5 +1,5 @@
-import OrderRepository from '@infrastructure/repositories/orderRepository'
-import { OrderEntity } from '@entitites/orderEntity'
+import OrderRepository from '../../infrastructure/repositories/orderRepository'
+import { OrderEntity } from '../../entities/orderEntity'
 
 /**
  * @param order 

@@ -1,5 +1,5 @@
-import UserRepository from '@infrastructure/repositories/userRepository'
-import { UserEntity } from '@entitites/userEntity'
+import UserRepository from '../../infrastructure/repositories/userRepository'
+import { UserEntity } from '../../entities/userEntity'
 
 /**
  * @param user 

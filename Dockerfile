@@ -1,36 +1,26 @@
 # Compilar TypeScript a JavaScript
-FROM node:22-alpine AS builder
+FROM node:22
 
 # Establecer el directorio de trabajo
 WORKDIR /apiCoordinadora
 
-# Copiar package.json y package-lock.json para cachear dependencias
-COPY package.json package-lock.json ./
+# Instala pnpm globalmente
+RUN npm install -g pnpm
 
-# Instalar dependencias de producción y desarrollo
-RUN npm install
+# Copiar package.json y package-lock.json para cachear dependencias
+COPY package.json pnpm-lock.yaml ./
+
+# Instala las dependencias con pnpm
+RUN pnpm install
 
 # Copiar el código fuente
 COPY . .
 
 # Compilar TypeScript a JavaScript
-RUN npm run build
+RUN pnpm run build
 
-
-
-# Imagen final
-FROM node:22-alpine
-
-# Establecer directorio de trabajo
-WORKDIR /apiCoordinadora
-
-# Copiar solo los archivos necesarios desde la etapa de compilación
-COPY --from=builder /app/package.json /app/package-lock.json ./
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/dist ./dist
-
-# Exponer el puerto de la aplicación
+# Exponer el puerto donde corre la aplicación
 EXPOSE 3000
 
 # Comando para iniciar la aplicación
-CMD ["node", "dist/app.js"]
+CMD ["pnpm", "start"]

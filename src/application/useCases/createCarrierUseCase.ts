@@ -1,5 +1,5 @@
-import CarrierRepository from '@infrastructure/repositories/carrierRepository'
-import { CarrierEntity } from '@entitites/carrierEntity'
+import CarrierRepository from '../../infrastructure/repositories/carrierRepository'
+import { CarrierEntity } from '../../entities/carrierEntity'
 
 /**
  * @param carrier 

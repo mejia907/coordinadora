@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken'
-import UserRepository from '@infrastructure/repositories/userRepository'
-import { AuthEntity } from '@entitites/authEntity'
-import { envs } from '@config/envs'
+import UserRepository from '../../infrastructure/repositories/userRepository'
+import { AuthEntity } from '../../entities/authEntity'
+import { envs } from '../../config/envs'
 
 /**
  * @param email 

@@ -1,25 +1,15 @@
 {
   "compilerOptions": {
+    "module": "NodeNext", 
+    "moduleResolution": "NodeNext",
     "target": "ES6",
-    "outDir": "./dist", // Carpeta de salida
-    "rootDir": "./src", // Carpeta de raiz de los archivos
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "resolveJsonModule": true,
     "strict": true,
-    "esModuleInterop": true, // Habilita el uso de modulos
-    "moduleResolution": "node", // Resolucion de modulos
-    "baseUrl": "./src", // Carpeta base
-    "paths": {
-        "@config/*": ["config/*"],
-        "@entitites/*": ["entitites/*"],
-        "@infrastructure/*": ["infrastructure/*"],
-        "@controllers/*": ["controllers/*"],
-        "@application/*": ["application/*"],
-        "@schemas/*": ["schemas/*"],
-    },
+    "esModuleInterop": true,
+    "baseUrl": "./src",
   },
-    "include": ["**/*.ts"], // Archivos a compilar
-    "exclude": ["node_modules"], // Archivos a excluir
-    "ts-node": {
-      "require": ["tsconfig-paths/register"] // Habilita el uso de tsconfig-paths
-  }
-
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
 }

@@ -1,11 +1,13 @@
 import { createPool } from 'mysql2/promise'
-import { envs } from '@config/envs'
+import { envs } from '../../config/envs'
+
+const isDocker = process.env.IS_DOCKER === 'true';
 
 /**
  * @description Coneccion a MySQL
  */
 const mysqlConnection = createPool({
-  host: envs.MYSQL_HOST,
+  host: isDocker ? envs.MYSQL_DOCKER_HOST : envs.MYSQL_HOST,
   port: envs.MYSQL_PORT,
   user: envs.MYSQL_USER,
   password: envs.MYSQL_PASSWORD,

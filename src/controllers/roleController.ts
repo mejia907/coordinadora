@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { CreateRoleUseCase } from '@application/useCases/createRoleUseCase'
+import { CreateRoleUseCase } from '../application/useCases/createRoleUseCase'
 
 /**
  * @description Controlador para el manejo de roles de usuario

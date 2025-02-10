@@ -1,5 +1,5 @@
-import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
-import { RoleEntity } from '@entitites/roleEntity'
+import { mysqlConnection } from '../../infrastructure/db/mysqlConnection'
+import { RoleEntity } from '../../entities/roleEntity'
 
 /**
  * @description Repositorio de roles

@@ -1,5 +1,5 @@
-import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
-import { RouteEntity } from '@entitites/routeEntity'
+import { mysqlConnection } from '../../infrastructure/db/mysqlConnection'
+import { RouteEntity } from '../../entities/routeEntity'
 
 /**
  * @description Repositorio de rutas

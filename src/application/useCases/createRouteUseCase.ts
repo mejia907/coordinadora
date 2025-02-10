@@ -1,5 +1,5 @@
-import RouteRepository from '@infrastructure/repositories/routeRepository'
-import { RouteEntity } from '@entitites/routeEntity'
+import RouteRepository from '../../infrastructure/repositories/routeRepository'
+import { RouteEntity } from '../../entities/routeEntity'
 
 /**
  * @param route 

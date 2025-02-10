@@ -1,4 +1,4 @@
-import OrderRepository from '@infrastructure/repositories/orderRepository'
+import OrderRepository from '../../infrastructure/repositories/orderRepository'
 
 /**
  * @param order_id 

@@ -1,9 +1,9 @@
 import { Router } from 'express'
-import { UserController } from '@controllers/userController'
-import { validateSchema } from '@infrastructure/http/middelwares/validateSchema'
-import { userSchema } from '@schemas/userSchema'
-import { authSchema } from '@schemas/authSchema'
-import { authRequired } from '@infrastructure/http/middelwares/authRequired'
+import { UserController } from '../../../controllers/userController'
+import { validateSchema } from '../../../infrastructure/http/middelwares/validateSchema'
+import { userSchema } from '../../../schemas/userSchema'
+import { authSchema } from '../../../schemas/authSchema'
+import { authRequired } from '../../../infrastructure/http/middelwares/authRequired'
 
 /**
  * @description Rutas de usuarios

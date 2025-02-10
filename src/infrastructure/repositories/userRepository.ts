@@ -1,7 +1,7 @@
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcryptjs'
 
-import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
-import { UserEntity } from '@entitites/userEntity'
+import { mysqlConnection } from '../../infrastructure/db/mysqlConnection'
+import { UserEntity } from '../../entities/userEntity'
 
 /**
  * @description Repositorio de usuarios

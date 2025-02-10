@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { CreatecarrierUseCase } from '@application/useCases/createCarrierUseCase'
+import { CreatecarrierUseCase } from '../application/useCases/createCarrierUseCase'
 
 /**
  * @description Controlador para el manejo de transportistas

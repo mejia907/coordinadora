@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { CreateRouteUseCase } from '@application/useCases/createRouteUseCase'
+import { CreateRouteUseCase } from '../application/useCases/createRouteUseCase'
 
 /**
  * @description Controlador para el manejo de rutas de envio

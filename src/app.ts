@@ -1,6 +1,6 @@
-import { envs } from '@config/envs'
-import { Routes } from '@infrastructure/http/routes/routes'
-import { Server } from '@infrastructure/http/server'
+import { envs } from './config/envs'
+import { Routes } from './infrastructure/http/routes/routes'
+import { Server } from './infrastructure/http/server'
 
 
 /**

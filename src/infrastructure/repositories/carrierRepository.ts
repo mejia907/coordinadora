@@ -1,5 +1,5 @@
-import { mysqlConnection } from '@infrastructure/db/mysqlConnection'
-import { CarrierEntity } from '@entitites/carrierEntity'
+import { mysqlConnection } from '../../infrastructure/db/mysqlConnection'
+import { CarrierEntity } from '../../entities/carrierEntity'
 
 /**
  * @param carrier
