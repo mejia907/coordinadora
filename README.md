@@ -2,6 +2,9 @@
 
 Este documento describe los pasos para instalar y configurar un contenedor Docker para la aplicación, junto con la definición del archivo `.env`.
 
+## Documentación de API
+`http://localhost:3000/api-docs/`
+
 ## Instalación y Configuración del Contenedor Docker
 
 ### 1. Requisitos Previos
