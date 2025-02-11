@@ -116,7 +116,7 @@ export default class UserRepository {
    * @param password 
    * @description Autenticación de usuarios
    */
-  login = async (email: string, password: string): Promise<AuthEntity | null> => {
+  public login = async (email: string, password: string): Promise<AuthEntity | null> => {
     try {
       const user = await this.findByEmail(email)
 
